@@ -1,2 +1,2 @@
 # Feldenkraisforyou
-Ein all-in app für Feldenrkaisfans
+Ein all-in app für Feldenkraisfans
