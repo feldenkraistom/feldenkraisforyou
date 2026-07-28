@@ -6,7 +6,7 @@ const SUPABASE_URL = "https://foddorljzzricsrkzxtf.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_0R_F74kWn_QhtSHIcVTZ4w_XDhTc-KK";
 
 // Initialisiere den Supabase Client
-let supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) || null;
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 // Globaler Zustand für den aktuellen Nutzer & Einstellungen
 let currentUser = null;
