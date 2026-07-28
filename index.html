@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Feldenkraisforyou</title>
+    <!-- iOS / PWA Enhancements -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Feldenkrais">
+    <link rel="apple-touch-icon" href="https://placehold.co/180x180/2c5e43/ffffff?text=F4Y">
+    
+    <!-- Supabase JS Client library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- HEADER -->
+        <header class="app-header">
+            <h1 id="header-title">Feldenkraisforyou</h1>
+            <button id="logout-btn" class="btn-text hidden">Abmelden</button>
+        </header>
+
+        <!-- VIEWS CONTAINER -->
+        <main class="content">
+
+            <!-- 1. AUTH SCREEN (Login / Registration) -->
+            <section id="view-auth" class="view active">
+                <div class="card auth-card">
+                    <h2 id="auth-title">Willkommen zurück</h2>
+                    <p class="subtitle">Anmelden, um deine persönlichen Übungen fortzusetzen.</p>
+
+                    <form id="auth-form">
+                        <div class="form-group">
+                            <label for="auth-email">E-Mail</label>
+                            <input type="email" id="auth-email" placeholder="name@beispiel.at" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="auth-password">Passwort</label>
+                            <input type="password" id="auth-password" placeholder="••••••••" required>
+                        </div>
+
+                        <div id="auth-error" class="alert error hidden"></div>
+                        <div id="auth-success" class="alert success hidden"></div>
+
+                        <button type="submit" id="auth-submit-btn" class="btn btn-primary">Anmelden</button>
+                    </form>
+
+                    <div class="auth-toggle">
+                        <span id="auth-toggle-text">Noch kein Konto?</span>
+                        <button id="auth-toggle-btn" class="btn-link">Jetzt registrieren</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. MAIN MENU SCREEN -->
+            <section id="view-menu" class="view">
+                <div class="menu-header">
+                    <h2>Übungsübersicht</h2>
+                    <p class="subtitle">Wähle eine Kategorie oder eine geführte Lektion</p>
+                </div>
+
+                <div class="menu-grid">
+                    <button class="menu-card primary" onclick="navigateTo('view-meditation')">
+                        <div class="icon">🫁</div>
+                        <div class="menu-info">
+                            <h3>Atemmeditation</h3>
+                            <p>Rhythmische Atemübung & Retention</p>
+                        </div>
+                        <span class="chevron">›</span>
+                    </button>
+
+                    <button class="menu-card" onclick="alert('Bewusstheit durch Bewegung ist in Kürze verfügbar!')">
+                        <div class="icon">🧘</div>
+                        <div class="menu-info">
+                            <h3>Bewusstheit durch Bewegung</h3>
+                            <p>Sanfte Lektionen für den Körper</p>
+                        </div>
+                        <span class="chevron">›</span>
+                    </button>
+
+                    <button class="menu-card disabled">
+                        <div class="icon">✨</div>
+                        <div class="menu-info">
+                            <h3>Noch zu definieren 1</h3>
+                            <p>Demnächst verfügbar</p>
+                        </div>
+                    </button>
+
+                    <button class="menu-card disabled">
+                        <div class="icon">🌱</div>
+                        <div class="menu-info">
+                            <h3>Noch zu definieren 2</h3>
+                            <p>Demnächst verfügbar</p>
+                        </div>
+                    </button>
+
+                    <button class="menu-card secondary" onclick="navigateTo('view-settings')">
+                        <div class="icon">⚙️</div>
+                        <div class="menu-info">
+                            <h3>Nutzereinstellungen</h3>
+                            <p>Profil und Standard-Präferenzen</p>
+                        </div>
+                        <span class="chevron">›</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 3. ATEMMEDITATION MAIN SCREEN (1a) -->
+            <section id="view-meditation" class="view">
+                <button class="btn-back" onclick="navigateTo('view-menu')">← Zurück zum Menü</button>
+                
+                <div class="meditation-container">
+                    <div class="card text-center">
+                        <h2>Atemmeditation</h2>
+                        <p class="subtitle">Finde deine innere Ruhe und Balance</p>
+
+                        <div class="meditation-circle-placeholder">
+                            <span>🫁</span>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button id="start-meditation-btn" class="btn btn-primary btn-large">Start der Meditation</button>
+                            <button class="btn btn-outline" onclick="navigateTo('view-settings')">Einstellungen anpassen</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. SETTINGS SCREEN (1a.ii) -->
+            <section id="view-settings" class="view">
+                <button class="btn-back" onclick="navigateTo('view-meditation')">← Zurück zur Meditation</button>
+
+                <div class="card">
+                    <h2>Einstellungen</h2>
+                    <p class="subtitle">Diese Parameter werden deinem Nutzerprofil zugeordnet.</p>
+
+                    <form id="settings-form">
+                        
+                        <!-- Atemgeschwindigkeit -->
+                        <div class="form-group">
+                            <label for="breath-speed">Atemgeschwindigkeit</label>
+                            <select id="breath-speed" class="form-select">
+                                <option value="meditative">Meditativ (Langsam)</option>
+                                <option value="walking">Gehend (Mittel)</option>
+                                <option value="hasty">Eilig (Zügig)</option>
+                            </select>
+                        </div>
+
+                        <!-- Runden -->
+                        <div class="form-group">
+                            <label for="rounds-count">Runden (1 – 6): <strong id="rounds-val">3</strong></label>
+                            <input type="range" id="rounds-count" min="1" max="6" value="3" step="1">
+                        </div>
+
+                        <!-- Atemzüge vor Retention -->
+                        <div class="form-group">
+                            <label for="breath-count">Atemzüge vor Retention (20 – 50): <strong id="breath-val">30</strong></label>
+                            <input type="range" id="breath-count" min="20" max="50" value="30" step="1">
+                        </div>
+
+                        <hr class="divider">
+
+                        <!-- Toggles / Checkboxes -->
+                        <div class="toggle-group">
+                            <label class="toggle-item">
+                                <span>Hintergrundmusik</span>
+                                <input type="checkbox" id="bg-music" checked>
+                                <span class="toggle-switch"></span>
+                            </label>
+
+                            <label class="toggle-item">
+                                <span>Anleitung von Thomas</span>
+                                <input type="checkbox" id="audio-guide" checked>
+                                <span class="toggle-switch"></span>
+                            </label>
+
+                            <label class="toggle-item">
+                                <span>Atemgeräusche</span>
+                                <input type="checkbox" id="breath-sounds" checked>
+                                <span class="toggle-switch"></span>
+                            </label>
+
+                            <label class="toggle-item">
+                                <span>Haptisches Feedback (Vibration)</span>
+                                <input type="checkbox" id="haptic-feedback" checked>
+                                <span class="toggle-switch"></span>
+                            </label>
+
+                            <label class="toggle-item">
+                                <span>Ping und Gong</span>
+                                <input type="checkbox" id="chime-gong" checked>
+                                <span class="toggle-switch"></span>
+                            </label>
+                        </div>
+
+                        <div id="settings-msg" class="alert success hidden">Einstellung erfolgreich gespeichert!</div>
+
+                        <button type="submit" id="save-settings-btn" class="btn btn-primary" style="margin-top: 20px;">Einstellungen speichern</button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
